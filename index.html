@@ -1,0 +1,1323 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Social Midia Futebol</title>
+  <style>
+    :root {
+      --bg: #f4f6f2;
+      --panel: #ffffff;
+      --ink: #18211c;
+      --muted: #66736a;
+      --line: #dce4dc;
+      --green: #1f7a4d;
+      --green-soft: #dff1e6;
+      --red: #b73b3b;
+      --blue: #2e5f8a;
+      --yellow: #d79c1e;
+      --black: #202124;
+      --shadow: 0 14px 30px rgba(26, 39, 31, .08);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(31, 122, 77, .06) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(31, 122, 77, .05) 1px, transparent 1px),
+        var(--bg);
+      background-size: 42px 42px;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: var(--radius);
+      min-height: 38px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--green); }
+
+    button.primary {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+
+    button.icon {
+      width: 38px;
+      padding: 0;
+      display: inline-grid;
+      place-items: center;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 10px;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(10px);
+      overflow: auto;
+    }
+
+    main {
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: white;
+      background:
+        radial-gradient(circle at 35% 35%, #fff 0 8%, transparent 9%),
+        conic-gradient(from 45deg, var(--green), var(--black), var(--blue), var(--green));
+      box-shadow: var(--shadow);
+      font-weight: 900;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.1;
+    }
+
+    .brand p, .small {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      justify-content: flex-start;
+    }
+
+    .nav button.active {
+      background: var(--green-soft);
+      border-color: #b9dec8;
+      color: #0d5934;
+      font-weight: 800;
+    }
+
+    .status-card {
+      margin-top: 20px;
+      padding: 14px;
+      background: #f8fbf8;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .status-card strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: clamp(24px, 4vw, 38px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .topbar p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      max-width: 820px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid.two { grid-template-columns: minmax(0, 1fr) minmax(320px, .75fr); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .panel {
+      background: rgba(255,255,255,.96);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      min-width: 0;
+    }
+
+    .panel h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: white;
+    }
+
+    .segmented button {
+      border: 0;
+      border-radius: 0;
+      border-right: 1px solid var(--line);
+      min-height: 40px;
+      padding: 7px;
+    }
+
+    .segmented button:last-child { border-right: 0; }
+    .segmented button.active { background: var(--black); color: #fff; }
+
+    .calendar-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .calendar-title {
+      text-align: center;
+      font-weight: 900;
+      text-transform: capitalize;
+    }
+
+    .weekdays, .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .weekday {
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .day {
+      min-height: 112px;
+      background: #fbfdfb;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 8px;
+      display: grid;
+      align-content: start;
+      gap: 6px;
+    }
+
+    .day.muted { opacity: .38; }
+    .day.today { outline: 2px solid var(--green); }
+
+    .day-num {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      width: fit-content;
+      max-width: 100%;
+      border-radius: 999px;
+      padding: 4px 7px;
+      background: #eef3ee;
+      color: #344138;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    .pill.reel { background: #e7f2ff; color: #214e72; }
+    .pill.story { background: #fff2d5; color: #7c5306; }
+    .pill.carrossel { background: #e9f6ef; color: #17623d; }
+    .pill.campanha { background: #ffe6e6; color: #8d2727; }
+
+    .post-list {
+      display: grid;
+      gap: 10px;
+      max-height: 560px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .post-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 12px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .post-card header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .post-card h4 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .copybox {
+      border-left: 3px solid var(--green);
+      background: #f7fbf8;
+      padding: 10px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 13px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .score {
+      display: grid;
+      gap: 7px;
+    }
+
+    .bar {
+      height: 9px;
+      background: #edf1ed;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      width: var(--w, 35%);
+      background: linear-gradient(90deg, var(--green), var(--yellow));
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .kpi {
+      background: #fbfdfb;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      min-height: 86px;
+    }
+
+    .kpi b {
+      display: block;
+      font-size: 24px;
+      line-height: 1.1;
+      margin-top: 4px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .idea-row {
+      display: grid;
+      grid-template-columns: 92px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px;
+      background: #fff;
+    }
+
+    .idea-row strong { display: block; }
+
+    .campaign-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .campaign {
+      min-height: 132px;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, #fff, #f7fbf9);
+      border-radius: var(--radius);
+      padding: 12px;
+    }
+
+    .visual {
+      min-height: 180px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(115deg, rgba(31,122,77,.92), rgba(32,33,36,.9)),
+        repeating-linear-gradient(90deg, transparent 0 38px, rgba(255,255,255,.16) 39px 42px),
+        radial-gradient(circle at 80% 20%, rgba(215,156,30,.8), transparent 28%);
+      position: relative;
+    }
+
+    .visual::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 2px solid rgba(255,255,255,.65);
+      border-radius: 50%;
+      transform: translateX(32%);
+    }
+
+    .visual::after {
+      content: "90";
+      position: absolute;
+      left: 18px;
+      bottom: 12px;
+      color: white;
+      font-size: 66px;
+      font-weight: 950;
+      opacity: .92;
+    }
+
+    .hidden { display: none !important; }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: var(--black);
+      color: #fff;
+      padding: 11px 13px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: .2s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .shell { grid-template-columns: 1fr; }
+      aside {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .nav { grid-template-columns: repeat(2, 1fr); }
+      main { padding: 16px; }
+      .grid.two, .grid.three, .campaign-grid { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 620px) {
+      .topbar { grid-template-columns: 1fr; }
+      .actions { justify-content: flex-start; }
+      .field-grid, .kpis { grid-template-columns: 1fr; }
+      .day { min-height: 86px; padding: 6px; }
+      .pill { font-size: 10px; }
+      .idea-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <div class="brand">
+        <div class="badge">SM</div>
+        <div>
+          <h1>Social Midia Futebol</h1>
+          <p>Planejamento inteligente para loja de camisas sem exposição de marcas.</p>
+        </div>
+      </div>
+
+      <div class="nav" id="nav">
+        <button class="active" data-view="dashboard" title="Visão geral">Painel</button>
+        <button data-view="generator" title="Gerador de conteúdo">Gerador</button>
+        <button data-view="calendar" title="Calendário editorial">Calendário</button>
+        <button data-view="analytics" title="Aprendizado por resultados">Resultados</button>
+        <button data-view="campaigns" title="Datas e campanhas">Campanhas</button>
+        <button data-view="settings" title="Configurações da loja">Configurações</button>
+      </div>
+
+      <div class="status-card">
+        <strong id="stageTitle">Perfil novo</strong>
+        <div class="small" id="stageText">Prioridade: alcance, constância e sinais de comunidade.</div>
+      </div>
+
+      <div class="status-card">
+        <strong>Regra de segurança</strong>
+        <div class="small">Evite escudos, marcas, patrocinadores, nomes oficiais e jogadores identificáveis. Venda por estética, memória e contexto.</div>
+      </div>
+    </aside>
+
+    <main>
+      <section id="dashboard" class="view">
+        <div class="topbar">
+          <div>
+            <h2>Seu social midia de futebol</h2>
+            <p>Crie posts, roteiros, stories, campanhas e acompanhe o que melhora conforme seu perfil ganha visualizações, comentários e seguidores.</p>
+          </div>
+          <div class="actions">
+            <button id="seedMonth">Gerar mês</button>
+            <button class="primary" id="quickIdea">Nova sugestão</button>
+          </div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><span class="small">Posts planejados</span><b id="kpiPosts">0</b></div>
+          <div class="kpi"><span class="small">Média de views</span><b id="kpiViews">0</b></div>
+          <div class="kpi"><span class="small">Média de comentários</span><b id="kpiComments">0</b></div>
+          <div class="kpi"><span class="small">Taxa de conversa</span><b id="kpiRate">0%</b></div>
+        </div>
+
+        <div class="grid two" style="margin-top:14px">
+          <div class="panel">
+            <h3>Próximos conteúdos</h3>
+            <div class="post-list" id="upcomingPosts"></div>
+          </div>
+          <div class="panel">
+            <h3>Diagnóstico profissional</h3>
+            <div class="visual" aria-hidden="true"></div>
+            <div class="note" id="diagnosis" style="margin-top:12px"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="generator" class="view hidden">
+        <div class="topbar">
+          <div>
+            <h2>Gerador de conteúdo</h2>
+            <p>Escolha o formato, objetivo e clima do post. Se a ideia ficar fraca ou arriscada, o app sugere outro caminho.</p>
+          </div>
+          <div class="actions">
+            <button id="reroll">Outra sugestão</button>
+            <button class="primary" id="savePost">Salvar no calendário</button>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="panel">
+            <h3>Briefing</h3>
+            <div class="field-grid">
+              <label>Data
+                <input id="postDate" type="date">
+              </label>
+              <label>Formato
+                <select id="format">
+                  <option>Reel</option>
+                  <option>Stories</option>
+                  <option>Carrossel</option>
+                  <option>Post estático</option>
+                  <option>Campanha</option>
+                </select>
+              </label>
+              <label>Objetivo
+                <select id="goal">
+                  <option>Alcance</option>
+                  <option>Comentários</option>
+                  <option>Directs</option>
+                  <option>Autoridade</option>
+                  <option>Desejo de compra</option>
+                </select>
+              </label>
+              <label>Clima
+                <select id="mood">
+                  <option>Nostalgia</option>
+                  <option>Dia de jogo</option>
+                  <option>Estilo casual</option>
+                  <option>Resenha</option>
+                  <option>Curiosidade</option>
+                  <option>Campanha sazonal</option>
+                </select>
+              </label>
+              <label class="full">Observação opcional
+                <textarea id="brief" placeholder="Ex.: foco em público jovem, peças retrô, cores alvinegras, final de semana..."></textarea>
+              </label>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Qualidade da ideia</h3>
+            <div class="score">
+              <div class="small">Força comercial sem expor produto</div>
+              <div class="bar"><span id="qualityBar"></span></div>
+              <div class="note" id="qualityText"></div>
+              <button id="improveIdea">Melhorar sugestão</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:14px">
+          <h3>Plano criado</h3>
+          <div id="generatedPlan" class="grid"></div>
+        </div>
+      </section>
+
+      <section id="calendar" class="view hidden">
+        <div class="topbar">
+          <div>
+            <h2>Calendário editorial</h2>
+            <p>Acompanhe os dias, formatos e campanhas. Use o mês gerado como base e ajuste conforme os resultados.</p>
+          </div>
+          <div class="actions">
+            <button id="prevMonth" class="icon" title="Mês anterior">&lt;</button>
+            <button id="nextMonth" class="icon" title="Próximo mês">&gt;</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="calendar-head">
+            <button id="todayBtn">Hoje</button>
+            <div class="calendar-title" id="monthTitle"></div>
+            <button id="addToday">Adicionar hoje</button>
+          </div>
+          <div class="weekdays">
+            <div class="weekday">Dom</div><div class="weekday">Seg</div><div class="weekday">Ter</div><div class="weekday">Qua</div><div class="weekday">Qui</div><div class="weekday">Sex</div><div class="weekday">Sáb</div>
+          </div>
+          <div class="calendar" id="calendarGrid"></div>
+        </div>
+      </section>
+
+      <section id="analytics" class="view hidden">
+        <div class="topbar">
+          <div>
+            <h2>Resultados e aprendizado</h2>
+            <p>Registre visualizações e comentários. O app ajusta recomendações para perfil novo, perfil em crescimento ou perfil com comunidade ativa.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="panel">
+            <h3>Atualizar desempenho</h3>
+            <div class="field-grid">
+              <label>Post
+                <select id="resultPost"></select>
+              </label>
+              <label>Visualizações
+                <input id="viewsInput" type="number" min="0" value="0">
+              </label>
+              <label>Comentários
+                <input id="commentsInput" type="number" min="0" value="0">
+              </label>
+              <label>Directs
+                <input id="directsInput" type="number" min="0" value="0">
+              </label>
+              <label class="full">Observações
+                <textarea id="resultNotes" placeholder="Ex.: muita gente respondeu enquete, poucas pessoas comentaram, direct perguntou por cores..."></textarea>
+              </label>
+            </div>
+            <div class="actions" style="margin-top:12px; justify-content:flex-start">
+              <button class="primary" id="saveResult">Salvar resultado</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>O que mudar agora</h3>
+            <div id="learningBox" class="timeline"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="campaigns" class="view hidden">
+        <div class="topbar">
+          <div>
+            <h2>Campanhas por datas-chave</h2>
+            <p>Ideias seguras para vender clima, estética e desejo sem depender de escudos ou produtos explícitos.</p>
+          </div>
+          <div class="actions">
+            <button id="campaignMonth">Campanhas do mês</button>
+          </div>
+        </div>
+        <div class="campaign-grid" id="campaignGrid"></div>
+      </section>
+
+      <section id="settings" class="view hidden">
+        <div class="topbar">
+          <div>
+            <h2>Configurações</h2>
+            <p>Defina o momento do perfil, tom de voz e limites de risco. Isso muda as sugestões do aplicativo.</p>
+          </div>
+          <div class="actions">
+            <button class="primary" id="saveSettings">Salvar</button>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="panel">
+            <h3>Perfil da loja</h3>
+            <div class="field-grid">
+              <label>Nome da loja
+                <input id="storeName" value="Minha Loja">
+              </label>
+              <label>Seguidores atuais
+                <input id="followers" type="number" min="0" value="0">
+              </label>
+              <label>Tom de voz
+                <select id="voice">
+                  <option>Próximo e torcedor</option>
+                  <option>Premium e curado</option>
+                  <option>Jovem e resenha</option>
+                  <option>Educativo e nostálgico</option>
+                </select>
+              </label>
+              <label>Nível de exposição
+                <select id="risk">
+                  <option value="baixo">Baixo: sem nomes e sem marcas</option>
+                  <option value="medio">Médio: referências indiretas de cores e regiões</option>
+                </select>
+              </label>
+              <label class="full">Público principal
+                <textarea id="audience">Torcedores que gostam de futebol, moda casual, peças retrô, resenha e dia de jogo.</textarea>
+              </label>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Regras fixas do social midia</h3>
+            <div class="copybox">1. Nunca depender de escudo, marca ou nome oficial para vender.
+2. Transformar produto em contexto: jogo, resenha, memória, estética e pertencimento.
+3. Perfil novo precisa de posts fáceis de comentar e compartilhar.
+4. Se views subirem e comentários não, pedir opinião direta.
+5. Se comentários subirem, criar sequência e levar para direct com naturalidade.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast">Salvo</div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const today = new Date();
+    const todayISO = toISO(today);
+    let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    const baseState = {
+      settings: {
+        storeName: "Minha Loja",
+        followers: 0,
+        voice: "Próximo e torcedor",
+        risk: "baixo",
+        audience: "Torcedores que gostam de futebol, moda casual, peças retrô, resenha e dia de jogo."
+      },
+      posts: [],
+      lastIdea: null
+    };
+
+    let state = load();
+
+    const hooks = [
+      "Algumas cores falam antes de qualquer escudo.",
+      "O jogo começa no look, muito antes do apito.",
+      "Futebol também é memória, textura e domingo.",
+      "Tem peça que carrega estádio mesmo fora dele.",
+      "A estética da arquibancada virou guarda-roupa."
+    ];
+
+    const ideas = {
+      "Reel": [
+        { title: "Look de dia de jogo", mood: "Dia de jogo", strength: 86 },
+        { title: "Do sofá para a resenha", mood: "Resenha", strength: 78 },
+        { title: "3 cortes de cena para vender nostalgia", mood: "Nostalgia", strength: 82 },
+        { title: "Detalhes que entregam estilo sem mostrar marca", mood: "Estilo casual", strength: 88 }
+      ],
+      "Stories": [
+        { title: "Batalha de cores", mood: "Comentários", strength: 80 },
+        { title: "Caixinha de estilo", mood: "Directs", strength: 84 },
+        { title: "Quiz de estética futebolística", mood: "Curiosidade", strength: 76 },
+        { title: "Bastidor sem revelar produto", mood: "Desejo de compra", strength: 81 }
+      ],
+      "Carrossel": [
+        { title: "Como escolher uma peça pela sua vibe", mood: "Desejo de compra", strength: 87 },
+        { title: "A evolução das golas no futebol", mood: "Curiosidade", strength: 75 },
+        { title: "Por que o retrô voltou", mood: "Nostalgia", strength: 83 },
+        { title: "Combinações de cores que sempre funcionam", mood: "Estilo casual", strength: 79 }
+      ],
+      "Post estático": [
+        { title: "Frase de domingo", mood: "Nostalgia", strength: 69 },
+        { title: "Pergunta de resenha", mood: "Comentários", strength: 74 },
+        { title: "Manifesto visual da loja", mood: "Autoridade", strength: 72 }
+      ],
+      "Campanha": [
+        { title: "Semana da resenha", mood: "Campanha sazonal", strength: 82 },
+        { title: "Especial nostalgia", mood: "Nostalgia", strength: 85 },
+        { title: "Guia de presentes do torcedor discreto", mood: "Desejo de compra", strength: 84 }
+      ]
+    };
+
+    const campaigns = [
+      { month: 1, day: 1, name: "Ano novo", angle: "Comece o ano com uma estética de arquibancada limpa e nova.", format: "Reel + Stories", cta: "Me fala suas cores para 2026." },
+      { month: 2, day: 14, name: "Pré-Carnaval", angle: "Looks leves para resenha, bloco e jogo sem parecer fantasia.", format: "Carrossel", cta: "Quer montar uma combinação segura?" },
+      { month: 3, day: 8, name: "Dia da Mulher", angle: "Torcedoras também criam cultura, memória e estilo.", format: "Reel", cta: "Marque alguém que vive futebol." },
+      { month: 4, day: 21, name: "Feriadão", angle: "Peças para viagem curta, churrasco e jogo com amigos.", format: "Stories + Reel", cta: "Chama no direct por estilo." },
+      { month: 5, day: 12, name: "Dia das Mães", angle: "Memórias de futebol em família sem usar clubes explícitos.", format: "Carrossel emocional", cta: "Qual jogo te lembra alguém?" },
+      { month: 6, day: 12, name: "Dia dos Namorados", angle: "Presente para quem troca flores por jogo, resenha e domingo.", format: "Campanha", cta: "Me diga a vibe da pessoa." },
+      { month: 6, day: 24, name: "São João", angle: "Cores, festa e futebol de interior em clima de resenha.", format: "Reel", cta: "Você iria de retrô ou moderno?" },
+      { month: 8, day: 9, name: "Dia dos Pais", angle: "A camisa que parece lembrança de infância.", format: "Reel + Carrossel", cta: "Qual jogo você viu com seu pai?" },
+      { month: 9, day: 7, name: "Independência", angle: "Estética verde, amarela e azul sem usar símbolos oficiais.", format: "Stories", cta: "Monte sua paleta." },
+      { month: 10, day: 12, name: "Dia das Crianças", angle: "Primeiras memórias de bola, álbum e camisa preferida.", format: "Post emocional", cta: "Qual foi sua primeira paixão no futebol?" },
+      { month: 11, day: 27, name: "Black Friday", angle: "Chame de garimpo de peças, não de promoção de clube.", format: "Sequência de Stories", cta: "Entre na lista de prioridade." },
+      { month: 12, day: 24, name: "Natal", angle: "Presente para quem vive futebol o ano inteiro.", format: "Campanha", cta: "Me chama com tamanho e estilo." }
+    ];
+
+    function load() {
+      try {
+        return { ...baseState, ...JSON.parse(localStorage.getItem("smf-state") || "{}") };
+      } catch {
+        return structuredClone(baseState);
+      }
+    }
+
+    function persist() {
+      localStorage.setItem("smf-state", JSON.stringify(state));
+      renderAll();
+    }
+
+    function toISO(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function addDays(date, days) {
+      const d = new Date(date);
+      d.setDate(d.getDate() + days);
+      return d;
+    }
+
+    function formatDate(iso) {
+      return new Date(iso + "T12:00:00").toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit" });
+    }
+
+    function getStage() {
+      const followers = Number(state.settings.followers || 0);
+      const avgViews = average(state.posts.map(p => Number(p.views || 0)));
+      if (followers < 500 && avgViews < 1200) return { name: "Perfil novo", text: "Prioridade: alcance, constância, perguntas fáceis e Reels curtos.", mult: 1 };
+      if (followers < 3000 || avgViews < 8000) return { name: "Perfil em crescimento", text: "Prioridade: séries, provas sociais discretas e mais directs.", mult: 1.15 };
+      return { name: "Comunidade ativa", text: "Prioridade: campanhas, listas VIP, collabs e calendário de lançamentos.", mult: 1.3 };
+    }
+
+    function average(values) {
+      const nums = values.filter(n => Number.isFinite(n) && n > 0);
+      return nums.length ? Math.round(nums.reduce((a,b) => a + b, 0) / nums.length) : 0;
+    }
+
+    function engagementRate() {
+      const views = state.posts.reduce((sum, p) => sum + Number(p.views || 0), 0);
+      const comments = state.posts.reduce((sum, p) => sum + Number(p.comments || 0), 0);
+      return views ? Math.round((comments / views) * 1000) / 10 : 0;
+    }
+
+    function planPost(options = {}) {
+      const format = options.format || $("format")?.value || "Reel";
+      const goal = options.goal || $("goal")?.value || "Alcance";
+      const mood = options.mood || $("mood")?.value || "Nostalgia";
+      const brief = options.brief || $("brief")?.value || "";
+      const pool = ideas[format] || ideas.Reel;
+      let picked = pool[Math.floor(Math.random() * pool.length)];
+      if (mood && Math.random() > .35) {
+        picked = pool.find(i => i.mood === mood || i.mood === goal) || picked;
+      }
+      const stage = getStage();
+      const quality = Math.min(96, Math.round((picked.strength + (format === "Reel" ? 7 : 0) + (goal === "Comentários" ? 4 : 0)) * stage.mult));
+      const weak = quality < 76 || (format === "Post estático" && goal === "Directs");
+      const title = weak ? `Versão melhorada: ${picked.title}` : picked.title;
+      const safeRefs = state.settings.risk === "medio"
+        ? "Use referência indireta por cor, região ou época, sem nomes oficiais."
+        : "Use apenas cores, texturas, cenário e emoção. Nada de nomes, escudos, marcas ou patrocinadores.";
+
+      const plan = {
+        id: crypto.randomUUID(),
+        date: options.date || $("postDate")?.value || todayISO,
+        format,
+        goal,
+        mood,
+        title,
+        quality,
+        hook: pick(hooks),
+        concept: buildConcept(format, goal, mood, brief),
+        script: buildScript(format, goal, mood),
+        image: buildImageDirection(format, mood),
+        caption: buildCaption(goal, mood),
+        stories: buildStories(goal, mood),
+        cta: buildCTA(goal),
+        safety: safeRefs,
+        alternative: weak ? buildAlternative(format, goal) : "Boa sugestão. Para testar variação, troque o gancho por uma pergunta mais direta nos comentários.",
+        views: 0,
+        comments: 0,
+        directs: 0,
+        notes: ""
+      };
+      state.lastIdea = plan;
+      renderGenerated(plan);
+      return plan;
+    }
+
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function buildConcept(format, goal, mood, brief) {
+      const base = {
+        "Nostalgia": "Transformar lembrança em desejo: infância, domingo, rádio, gol antigo, álbum e estética retrô.",
+        "Dia de jogo": "Mostrar preparação para assistir ao jogo sem revelar a peça completa.",
+        "Estilo casual": "Ensinar como usar estética de futebol com jeans, tênis, jaqueta e cores discretas.",
+        "Resenha": "Criar cena de encontro com amigos, bar, sofá, petiscos e reação ao jogo.",
+        "Curiosidade": "Atrair o público pelo conhecimento: cores, golas, listras, anos 90 e cultura de arquibancada.",
+        "Campanha sazonal": "Conectar a data comemorativa com presente, memória e estilo de torcedor."
+      };
+      return `${base[mood] || base.Nostalgia} Objetivo principal: ${goal.toLowerCase()}. ${brief ? "Observação aplicada: " + brief : ""}`.trim();
+    }
+
+    function buildScript(format, goal, mood) {
+      if (format === "Stories") {
+        return "Story 1: bastidor com tecido, cabide ou embalagem sem logos.\nStory 2: enquete de duas opções de cor ou estilo.\nStory 3: caixinha perguntando qual vibe a pessoa procura.\nStory 4: chamada discreta para direct com tamanho, estilo e ocasião.";
+      }
+      if (format === "Carrossel") {
+        return "Slide 1: pergunta forte.\nSlide 2: contexto de futebol e estilo.\nSlide 3: exemplo visual por paleta de cores, sem escudo.\nSlide 4: como usar no dia a dia.\nSlide 5: erro comum a evitar.\nSlide 6: pergunta final para gerar comentário.";
+      }
+      if (format === "Campanha") {
+        return "Abertura: data comemorativa ligada a futebol.\nCena 2: pessoa pensando em presente ou look.\nCena 3: detalhes de cor, textura e ocasião.\nCena 4: prova de desejo sem produto explícito.\nFechamento: direct para curadoria personalizada.";
+      }
+      return "Cena 1: close em bola, controle, tênis ou porta de casa.\nCena 2: mão pegando peça dobrada sem escudo.\nCena 3: corte de gola, manga ou textura.\nCena 4: pessoa pronta para sair ou assistir jogo.\nCena 5: reação de resenha.\nTexto final: futebol também se veste fora dos 90 minutos.";
+    }
+
+    function buildImageDirection(format, mood) {
+      const light = mood === "Nostalgia" ? "luz quente, textura de foto antiga" : "luz natural, fundo limpo e contraste médio";
+      return `Direção visual: ${light}; enquadramento fechado; escudo oculto; logos fora do quadro; usar bola, sofá, bar, rua, cabide, tênis ou controle como contexto. Para ${format.toLowerCase()}, priorize cortes rápidos e detalhes.`;
+    }
+
+    function buildCaption(goal, mood) {
+      const starts = {
+        "Alcance": "Futebol também é estética.",
+        "Comentários": "Escolha sem pensar muito:",
+        "Directs": "Me chama com sua vibe que eu te ajudo a garimpar uma peça.",
+        "Autoridade": "O estilo de arquibancada sempre contou histórias.",
+        "Desejo de compra": "Tem peça que muda o clima do look sem precisar gritar."
+      };
+      const question = mood === "Nostalgia" ? "Qual camisa marcou sua memória?" : "Você iria de retrô, moderna ou clássica?";
+      return `${starts[goal] || starts.Alcance}\n\nSem escudo, sem exagero, só a energia de quem vive o jogo.\n\n${question}`;
+    }
+
+    function buildStories(goal, mood) {
+      return [
+        "Enquete: retrô ou atual?",
+        "Quiz: essa paleta lembra qual fase do futebol?",
+        "Caixinha: descreva sua peça ideal sem falar clube.",
+        goal === "Directs" ? "Sticker: quer curadoria por tamanho e estilo?" : "Termômetro: quanto essa vibe combina com domingo?"
+      ].join("\n");
+    }
+
+    function buildCTA(goal) {
+      if (goal === "Directs") return "Chama no direct com tamanho, estilo e cores favoritas.";
+      if (goal === "Comentários") return "Comenta sua escolha: retrô, moderna ou clássica.";
+      if (goal === "Desejo de compra") return "Quer uma peça nessa vibe? Me chama no direct.";
+      return "Salva para usar como inspiração no próximo dia de jogo.";
+    }
+
+    function buildAlternative(format, goal) {
+      return `A sugestão inicial está pouco forte para ${goal.toLowerCase()}. Melhor caminho: transformar em ${format === "Post estático" ? "Reel curto ou Stories interativo" : "série de 3 posts"} com pergunta no final e bastidor seguro.`;
+    }
+
+    function renderGenerated(plan = state.lastIdea) {
+      if (!plan) plan = planPost({ date: todayISO });
+      $("qualityBar").style.setProperty("--w", `${plan.quality}%`);
+      $("qualityText").textContent = plan.quality >= 82
+        ? "Ideia forte: gera desejo sem depender do produto explícito."
+        : "Ideia aproveitável, mas precisa de gancho mais direto ou formato mais interativo.";
+      $("generatedPlan").innerHTML = [
+        section("Título", plan.title),
+        section("Conceito", plan.concept),
+        section("Roteiro", plan.script),
+        section("Imagem e direção visual", plan.image),
+        section("Legenda", plan.caption),
+        section("Stories de apoio", plan.stories),
+        section("Chamada", plan.cta),
+        section("Proteção contra risco", plan.safety),
+        section("Alternativa se a ideia não estiver boa", plan.alternative)
+      ].join("");
+    }
+
+    function section(title, body) {
+      return `<div class="post-card"><h4>${escapeHTML(title)}</h4><div class="copybox">${escapeHTML(body)}</div></div>`;
+    }
+
+    function escapeHTML(str) {
+      return String(str || "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;" }[m]));
+    }
+
+    function saveGeneratedPost() {
+      const post = state.lastIdea || planPost();
+      const exists = state.posts.some(p => p.id === post.id);
+      if (!exists) state.posts.push(post);
+      persist();
+      toast("Post salvo no calendário");
+    }
+
+    function seedMonth() {
+      const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const pattern = [
+        ["Reel", "Alcance", "Nostalgia"],
+        ["Stories", "Comentários", "Curiosidade"],
+        ["Carrossel", "Autoridade", "Estilo casual"],
+        ["Reel", "Desejo de compra", "Dia de jogo"],
+        ["Stories", "Directs", "Resenha"],
+        ["Reel", "Alcance", "Dia de jogo"]
+      ];
+      for (let i = 0; i < 28; i++) {
+        const dow = addDays(start, i).getDay();
+        if ([1,2,3,4,5,6].includes(dow)) {
+          const p = pattern[i % pattern.length];
+          const post = planPost({ date: toISO(addDays(start, i)), format: p[0], goal: p[1], mood: p[2] });
+          state.posts.push(post);
+        }
+      }
+      addMonthlyCampaigns();
+      persist();
+      toast("Mês editorial criado");
+    }
+
+    function addMonthlyCampaigns() {
+      const m = today.getMonth() + 1;
+      const y = today.getFullYear();
+      campaigns.filter(c => c.month === m).forEach(c => {
+        const date = `${y}-${String(c.month).padStart(2,"0")}-${String(c.day).padStart(2,"0")}`;
+        state.posts.push({
+          ...planPost({ date, format: "Campanha", goal: "Directs", mood: "Campanha sazonal" }),
+          title: c.name,
+          concept: c.angle,
+          cta: c.cta
+        });
+      });
+    }
+
+    function renderDashboard() {
+      const stage = getStage();
+      $("stageTitle").textContent = stage.name;
+      $("stageText").textContent = stage.text;
+      $("kpiPosts").textContent = state.posts.length;
+      $("kpiViews").textContent = average(state.posts.map(p => Number(p.views || 0))).toLocaleString("pt-BR");
+      $("kpiComments").textContent = average(state.posts.map(p => Number(p.comments || 0))).toLocaleString("pt-BR");
+      $("kpiRate").textContent = `${engagementRate()}%`;
+
+      const next = state.posts
+        .slice()
+        .filter(p => p.date >= todayISO)
+        .sort((a,b) => a.date.localeCompare(b.date))
+        .slice(0, 8);
+      $("upcomingPosts").innerHTML = next.length ? next.map(postCard).join("") : `<div class="note">Nenhum post planejado ainda. Clique em gerar mês para criar uma programação inicial.</div>`;
+      $("diagnosis").textContent = buildDiagnosis();
+    }
+
+    function postCard(p) {
+      return `<article class="post-card">
+        <header>
+          <div>
+            <h4>${escapeHTML(p.title)}</h4>
+            <div class="meta">
+              <span class="pill ${p.format.toLowerCase().replace("ó","o")}">${escapeHTML(p.format)}</span>
+              <span class="pill">${formatDate(p.date)}</span>
+              <span class="pill">${escapeHTML(p.goal)}</span>
+            </div>
+          </div>
+          <button class="icon" title="Usar no gerador" onclick="editPost('${p.id}')">↗</button>
+        </header>
+        <div class="note">${escapeHTML(p.concept)}</div>
+      </article>`;
+    }
+
+    function buildDiagnosis() {
+      const rate = engagementRate();
+      const avgViews = average(state.posts.map(p => Number(p.views || 0)));
+      if (!state.posts.some(p => p.views > 0)) {
+        return "Como o perfil ainda é novo ou sem histórico registrado, o melhor caminho é publicar Reels curtos, Stories com enquetes simples e carrosséis educativos. O app vai aprender quando você registrar visualizações, comentários e directs.";
+      }
+      if (avgViews > 1000 && rate < 0.6) return "As pessoas estão vendo, mas não estão conversando. Troque legendas bonitas por perguntas de escolha rápida e use Stories com enquete antes do post principal.";
+      if (rate >= 1.2) return "O público está respondendo bem. Crie séries com o mesmo tema vencedor e leve os interessados para direct com curadoria por cor, tamanho e ocasião.";
+      return "O desempenho está em fase de teste. Mantenha constância, compare formatos e repita os temas com mais comentários.";
+    }
+
+    function renderCalendar() {
+      $("monthTitle").textContent = currentMonth.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+      const first = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+      const start = addDays(first, -first.getDay());
+      const cells = [];
+      for (let i = 0; i < 42; i++) {
+        const d = addDays(start, i);
+        const iso = toISO(d);
+        const posts = state.posts.filter(p => p.date === iso);
+        const muted = d.getMonth() !== currentMonth.getMonth() ? "muted" : "";
+        const isToday = iso === todayISO ? "today" : "";
+        cells.push(`<div class="day ${muted} ${isToday}" ondblclick="quickAdd('${iso}')">
+          <div class="day-num">${d.getDate()}</div>
+          ${posts.map(p => `<span class="pill ${p.format.toLowerCase().split(" ")[0]}">${escapeHTML(p.format)}: ${escapeHTML(p.title)}</span>`).join("")}
+        </div>`);
+      }
+      $("calendarGrid").innerHTML = cells.join("");
+    }
+
+    function renderResults() {
+      $("resultPost").innerHTML = state.posts
+        .slice()
+        .sort((a,b) => b.date.localeCompare(a.date))
+        .map(p => `<option value="${p.id}">${formatDate(p.date)} - ${escapeHTML(p.title)}</option>`)
+        .join("");
+      $("learningBox").innerHTML = learningSuggestions().map(item => `<div class="idea-row"><span class="pill">${item.tag}</span><div><strong>${item.title}</strong><div class="note">${item.text}</div></div><button onclick="applySuggestion('${item.type}')">Aplicar</button></div>`).join("");
+    }
+
+    function learningSuggestions() {
+      const avgViews = average(state.posts.map(p => Number(p.views || 0)));
+      const rate = engagementRate();
+      const stage = getStage().name;
+      const list = [
+        { tag: stage, title: "Ajuste para o momento do perfil", text: getStage().text, type: "stage" }
+      ];
+      if (avgViews === 0) list.push({ tag: "Começo", title: "Criar base de teste", text: "Publique 3 Reels, 2 carrosséis e Stories diários por 14 dias antes de decidir o que funciona.", type: "month" });
+      else if (avgViews > 1000 && rate < 0.6) list.push({ tag: "Correção", title: "Mais conversa", text: "Troque posts contemplativos por perguntas: retrô ou atual, listrada ou lisa, dia de jogo ou rolê.", type: "comments" });
+      else if (rate >= 1.2) list.push({ tag: "Escalar", title: "Criar série vencedora", text: "Repita o tema com maior comentário em 3 episódios e feche com chamada para direct.", type: "series" });
+      list.push({ tag: "Segurança", title: "Controle de direitos", text: "Quando quiser sugerir um clube, use cor, época, cidade ou competição de forma indireta.", type: "safe" });
+      return list;
+    }
+
+    function renderCampaigns() {
+      $("campaignGrid").innerHTML = campaigns.map(c => `<article class="campaign">
+        <div class="meta"><span class="pill campanha">${String(c.day).padStart(2,"0")}/${String(c.month).padStart(2,"0")}</span><span class="pill">${escapeHTML(c.format)}</span></div>
+        <h3>${escapeHTML(c.name)}</h3>
+        <div class="note">${escapeHTML(c.angle)}</div>
+        <div class="copybox">${escapeHTML(c.cta)}</div>
+      </article>`).join("");
+    }
+
+    function renderSettings() {
+      $("storeName").value = state.settings.storeName;
+      $("followers").value = state.settings.followers;
+      $("voice").value = state.settings.voice;
+      $("risk").value = state.settings.risk;
+      $("audience").value = state.settings.audience;
+    }
+
+    function renderAll() {
+      renderDashboard();
+      renderGenerated(state.lastIdea);
+      renderCalendar();
+      renderResults();
+      renderCampaigns();
+      renderSettings();
+    }
+
+    function saveSettings() {
+      state.settings = {
+        storeName: $("storeName").value,
+        followers: Number($("followers").value || 0),
+        voice: $("voice").value,
+        risk: $("risk").value,
+        audience: $("audience").value
+      };
+      persist();
+      toast("Configurações salvas");
+    }
+
+    function saveResult() {
+      const id = $("resultPost").value;
+      const p = state.posts.find(x => x.id === id);
+      if (!p) return toast("Crie um post primeiro");
+      p.views = Number($("viewsInput").value || 0);
+      p.comments = Number($("commentsInput").value || 0);
+      p.directs = Number($("directsInput").value || 0);
+      p.notes = $("resultNotes").value;
+      persist();
+      toast("Resultado salvo e recomendações atualizadas");
+    }
+
+    function editPost(id) {
+      const p = state.posts.find(x => x.id === id);
+      if (!p) return;
+      state.lastIdea = p;
+      $("postDate").value = p.date;
+      $("format").value = p.format;
+      $("goal").value = p.goal;
+      $("mood").value = p.mood;
+      showView("generator");
+      renderGenerated(p);
+    }
+
+    function quickAdd(iso) {
+      $("postDate").value = iso;
+      showView("generator");
+      planPost({ date: iso });
+    }
+
+    function applySuggestion(type) {
+      if (type === "month") seedMonth();
+      else if (type === "comments") {
+        $("format").value = "Stories";
+        $("goal").value = "Comentários";
+        $("mood").value = "Resenha";
+        showView("generator");
+        planPost();
+      } else if (type === "series") {
+        $("format").value = "Reel";
+        $("goal").value = "Directs";
+        $("mood").value = "Nostalgia";
+        showView("generator");
+        planPost();
+      } else {
+        showView("generator");
+        planPost();
+      }
+    }
+
+    function showView(name) {
+      document.querySelectorAll(".view").forEach(v => v.classList.toggle("hidden", v.id !== name));
+      document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("active", b.dataset.view === name));
+    }
+
+    function toast(msg) {
+      $("toast").textContent = msg;
+      $("toast").classList.add("show");
+      setTimeout(() => $("toast").classList.remove("show"), 1800);
+    }
+
+    window.editPost = editPost;
+    window.quickAdd = quickAdd;
+    window.applySuggestion = applySuggestion;
+
+    $("nav").addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-view]");
+      if (btn) showView(btn.dataset.view);
+    });
+    $("seedMonth").addEventListener("click", seedMonth);
+    $("quickIdea").addEventListener("click", () => { showView("generator"); planPost(); });
+    $("reroll").addEventListener("click", () => planPost());
+    $("improveIdea").addEventListener("click", () => {
+      $("format").value = "Reel";
+      $("goal").value = "Comentários";
+      planPost();
+    });
+    $("savePost").addEventListener("click", saveGeneratedPost);
+    $("prevMonth").addEventListener("click", () => { currentMonth.setMonth(currentMonth.getMonth() - 1); renderCalendar(); });
+    $("nextMonth").addEventListener("click", () => { currentMonth.setMonth(currentMonth.getMonth() + 1); renderCalendar(); });
+    $("todayBtn").addEventListener("click", () => { currentMonth = new Date(today.getFullYear(), today.getMonth(), 1); renderCalendar(); });
+    $("addToday").addEventListener("click", () => quickAdd(todayISO));
+    $("saveSettings").addEventListener("click", saveSettings);
+    $("saveResult").addEventListener("click", saveResult);
+    $("campaignMonth").addEventListener("click", () => { addMonthlyCampaigns(); persist(); toast("Campanhas do mês adicionadas"); });
+
+    ["format", "goal", "mood", "brief", "postDate"].forEach(id => $(id).addEventListener("change", () => planPost()));
+    $("postDate").value = todayISO;
+    planPost({ date: todayISO });
+    renderAll();
+  </script>
+</body>
+</html>
